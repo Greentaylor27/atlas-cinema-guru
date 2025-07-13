@@ -2,6 +2,7 @@ import "@/app/global.css";
 import { Metadata } from "next";
 import Header from "@/components/Header";
 import { SessionProvider } from "next-auth/react";
+import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "Cinema Guru | Atlas School",
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: Props) {
       <body className="antialiased bg-[#00003c] text-white">
         <SessionProvider>
           <Header />
+          <Sidebar />
           {children}
         </SessionProvider>
       </body>
