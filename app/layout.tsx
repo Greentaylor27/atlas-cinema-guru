@@ -18,8 +18,12 @@ export default function RootLayout({ children }: Props) {
       <body className="antialiased bg-[#00003c] text-white">
         <SessionProvider>
           <Header />
-          <Sidebar />
-          {children}
+          <div className="flex h-screen">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto">
+              {children}
+            </main>
+          </div>
         </SessionProvider>
       </body>
     </html>
