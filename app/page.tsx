@@ -1,7 +1,10 @@
+import PaginationButtons from "@/components/PaginationButton";
+
 export default async function Page() {
   return (
-    <div className="flex items-center justify-center h-screen">
-      This is the landing page.
+    <div className="flex flex-col items-center justify-center h-screen space-y-6">
+      <p>This is the landing page.</p>
+      <PaginationButtons />
     </div>
   );
 }
