@@ -27,3 +27,18 @@
   width: 1px;
   background-color: #00003C;
 }
+
+.search-bar {
+  border: 1px solid #1DD2AF;
+  border-radius: 9999px;
+  background-color: #001241;
+  color: white;
+  padding: 0.5rem 1rem;
+  outline: none;
+  width: 100%;
+}
+
+.search-bar:focus {
+  border: 1px solid #1DD2AF;
+  outline: none;
+}
