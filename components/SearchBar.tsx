@@ -1,10 +1,10 @@
 export default function SearchBar() {
   return (
-    <div>
-      <form role="search" className="flex flex-col">
+    <div className="w-full max-w-sm ml-4">
+      <form role="search" className="flex flex-col w-full">
         <label htmlFor="search" className="p-2">Search</label>
         <input
-          className="rounded-full border-1 border-[#1DD2AF] p-1 w-full"
+          className="search-bar"
           type="search"
           name="search"
           id="search"
