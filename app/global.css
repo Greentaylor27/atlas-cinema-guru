@@ -24,7 +24,7 @@
 }
 
 .pagination-divider {
-  width: 1px;
+  width: 4px;
   background-color: #00003C;
 }
 
@@ -40,5 +40,13 @@
 
 .search-bar:focus {
   border: 1px solid #1DD2AF;
+  outline: none;
+}
+
+.filterButton {
+  border: 1px solid #1DD2AF;
+  border-radius: 9999px;
+  color: white;
+  padding: 0.5rem 1rem;
   outline: none;
 }
