@@ -6,8 +6,8 @@ export default async function GenreFilter() {
 
   return(
     <div className="flex flex-col">
-      <label className="mb-2">Genre</label>
-      <div className="grid grid-cols-5 gap-2 max-h-1/3">
+      <label className="mb-2">Genres</label>
+      <div className="grid grid-cols-5 gap-1.5 w-full">
         {genre.map((genre: string) => (
           <GenreButton key={genre} genre={genre} />
         ))}
