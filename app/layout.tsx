@@ -20,7 +20,7 @@ export default function RootLayout({ children }: Props) {
           <Header />
           <div className="flex h-screen">
             <Sidebar />
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto p-2">
               {children}
             </main>
           </div>
