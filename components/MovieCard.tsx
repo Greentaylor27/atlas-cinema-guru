@@ -1,6 +1,13 @@
+'use client'
+
+import { useState } from "react";
 import Image from "next/image";
-import Clock from "@/assets/Icon/Solid/clock.svg";
-import Star from "@/assets/Icon/Solid/star.svg";
+import ClockOutline from "@/assets/Icon/Outline/clock.svg";
+import StarOutline from "@/assets/Icon/Outline/star.svg";
+import ClockSolid from "@/assets/Icon/Solid/clock.svg";
+import StarSolid from "@/assets/Icon/Solid/star.svg";
+import IconToggleButton from "./IconToggleButton";
+
 
 type MovieCardProps = {
   title: string;
@@ -21,6 +28,9 @@ export default function({
   isFavorited = false,
   isWatchLater = false,
 }: MovieCardProps) {
+  const [favorited, setFavorited] = useState(isFavorited);
+  const [watchLater, setWatchLater] = useState(isWatchLater);
+
   return (
     <div className="group relative shadow-lg bg-[#001241] text-white transition-transform duration-300 hover:scale-105 rounded-xl border-2 border-[#1DD2AF]">
       {/* Unhovered movie card */}
@@ -32,30 +42,29 @@ export default function({
         className="w-full h-auto object-cover"
       />
 
+      {/* Top row of hover state */}
+      <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
+        <button onClick={() => setFavorited(!favorited)} aria-label="Toggle Favorite" className="cursor-pointer">
+          <IconToggleButton
+            activeIcon={StarSolid}
+            inactiveIcon={StarOutline}
+            isActive={favorited}
+            alt="Favorite"
+          />
+        </button>
+        <button onClick={() => setWatchLater(!watchLater)} aria-label="Toggle Watch Later" className="cursor-pointer">
+          <IconToggleButton
+            activeIcon={ClockSolid}
+            inactiveIcon={ClockOutline}
+            isActive={watchLater}
+            alt="Watch Later"
+          />
+        </button>
+      </div>
+
       {/* Hovered Info */}
       <div className="absolute bottom-0 left-0 right-0 bg-[#001241] opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-300 flex flex-col p-3 h-[40%] justify-between">
 
-        {/* Top row of hover state */}
-        <div className="flex justify-end space-x-3 mb-1">
-          <button>
-            <img
-              src={Star}
-              alt="Favorite"
-              className={`fill-white transition-opacity duration-200 ${
-                isFavorited ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          </button>
-          <button>
-            <img
-              src={Clock}
-              alt="Watch Later"
-              className={`fill-white transition-opacity duration-200 ${
-                isWatchLater ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          </button>
-        </div>
 
         {/* Title and Year */}
         <p className="text-2xl font-light pb-2">
@@ -63,7 +72,7 @@ export default function({
         </p>
 
         {/* Synopsis */}
-        <p className="text-lg font-light">{synopsis || "Something went wrong here!!"}</p>
+        <p className="text-lg font-light">{synopsis}</p>
 
         {/* Genre */}
         <div className="mt-auto">
