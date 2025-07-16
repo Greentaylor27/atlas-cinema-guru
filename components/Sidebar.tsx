@@ -1,5 +1,5 @@
 import SidebarButton from "./SidebarButton";
-import Clock from "@/assets/Icon/Solid/clock.png";
+import Clock from "@/assets/Icon/Solid/clock.svg";
 import Star from "@/assets/Icon/Solid/star.svg";
 import Folder from "@/assets/Icon/Solid/folder.svg";
 
