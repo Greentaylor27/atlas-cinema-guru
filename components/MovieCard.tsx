@@ -7,6 +7,7 @@ import StarOutline from "@/assets/Icon/Outline/star.svg";
 import ClockSolid from "@/assets/Icon/Solid/clock.svg";
 import StarSolid from "@/assets/Icon/Solid/star.svg";
 import IconToggleButton from "./IconToggleButton";
+import { useFavorite } from "@/hooks/useFavorites";
 
 
 type MovieCardProps = {
@@ -30,7 +31,7 @@ export default function({
   isFavorited = false,
   isWatchLater = false,
 }: MovieCardProps) {
-  const [favorited, setFavorited] = useState(isFavorited);
+  const { favorited, toggleFavorite } = useFavorite(isFavorited, titleId);
   const [watchLater, setWatchLater] = useState(isWatchLater);
 
   return (
@@ -47,20 +48,7 @@ export default function({
       {/* Top row of hover state */}
       <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
         <button
-          onClick={async () => {
-            setFavorited((prev) => !prev);
-            try {
-              await fetch("/api/favorites", {
-                method: favorited ? "DELETE" : "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ title_id: titleId }),
-              });
-            } catch (error) {
-              console.error("Error toggling favorite:", error);
-            }
-          }}
+          onClick={toggleFavorite}
           aria-label="Toggle Favorite" 
           className="cursor-pointer"
         >
