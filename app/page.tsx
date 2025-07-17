@@ -50,6 +50,7 @@ export default async function Page({ searchParams }: PageProps) {
       <section className="grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-4 justify-center items-start">
         {titles.map((movies) => (
           <MovieCard
+          titleId={movies.id}
             key={movies.id}
             title={movies.title}
             image={movies.image}

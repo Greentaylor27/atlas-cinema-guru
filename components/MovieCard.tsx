@@ -10,6 +10,7 @@ import IconToggleButton from "./IconToggleButton";
 
 
 type MovieCardProps = {
+  titleId: string;
   title: string;
   image: string;
   year: number;
@@ -20,6 +21,7 @@ type MovieCardProps = {
 }
 
 export default function({
+  titleId,
   title,
   image,
   year,
@@ -44,7 +46,24 @@ export default function({
 
       {/* Top row of hover state */}
       <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
-        <button onClick={() => setFavorited(!favorited)} aria-label="Toggle Favorite" className="cursor-pointer">
+        <button
+          onClick={async () => {
+            setFavorited((prev) => !prev);
+            try {
+              await fetch("/api/favorites", {
+                method: favorited ? "DELETE" : "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ title_id: titleId }),
+              });
+            } catch (error) {
+              console.error("Error toggling favorite:", error);
+            }
+          }}
+          aria-label="Toggle Favorite" 
+          className="cursor-pointer"
+        >
           <IconToggleButton
             activeIcon={StarSolid}
             inactiveIcon={StarOutline}

@@ -1,4 +1,4 @@
-import { fetchFavorites } from "@/lib/data";
+import { deleteFavorite, fetchFavorites, insertFavorite } from "@/lib/data";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
@@ -24,4 +24,42 @@ export const GET = auth(async (req: NextRequest) => {
   const favorites = await fetchFavorites(page, email);
 
   return NextResponse.json({ favorites });
+});
+
+export const POST = auth(async (req: NextRequest) => {
+  const body = await req.json();
+  const title_id = body.title_id;
+
+  //@ts-ignore
+  const email = req.auth?.user?.email;
+
+  if(!email) {
+    return NextResponse.json({ error: "Unathorized" }, { status: 401 });
+  }
+
+  try {
+    await insertFavorite(title_id, email);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to add favorite" }, { status: 500 });
+  }
+});
+
+export const DELETE = auth(async (req: NextRequest) => {
+  const body = await req.json();
+  const title_id = body.title_id;
+
+  //@ts-ignore
+  const email = req.auth?.user?.email;
+
+  if (!email) {
+    return NextResponse.json({ error: "Unathorized"}, { status: 401 });
+  }
+
+  try {
+    await deleteFavorite(title_id, email);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to remove favorite"}, { status: 500 });
+  }
 });
