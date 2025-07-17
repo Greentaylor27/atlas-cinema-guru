@@ -1,13 +1,32 @@
-export default function PaginationButtons() {
+type PaginationButtonProps = {
+  currentPage: number;
+  isLastPage: boolean;
+}
+export default function PaginationButtons({ currentPage, isLastPage }: PaginationButtonProps) {
+  const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+  const nextPage = currentPage + 1;
+
   return (
     <div className="pagination-container">
-      <button className="pagination-button">
+      <a
+        href={`?page=${prevPage}`}
+        className="pagination-button text-md"
+        aria-disabled={currentPage === 1}
+        tabIndex={currentPage === 1 ? -1 : 0}
+      >
         Previous
-      </button>
+      </a>
+
       <div className="pagination-divider"></div>
-      <button className="pagination-button text-md">
+
+      <a
+        href={`?page=${nextPage}`}
+        className="pagination-button text-md"
+        aria-disabled={isLastPage}
+        tabIndex={isLastPage ? -1 : 0}
+      >
         Next
-      </button>
+      </a>
     </div>
   );
 }

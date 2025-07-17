@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import MovieCard from "@/components/MovieCard";
@@ -5,8 +7,12 @@ import { fetchGenres, fetchTitles } from "@/lib/data";
 import PaginationButtons from "@/components/PaginationButton";
 import Filter from "@/components/Filter";
 
+type PageProps = {
+  searchParams: { page?: string }
+};
 
-export default async function Page() {
+
+export default async function Page({ searchParams }: PageProps) {
   const session = await auth();
   const userEmail = session?.user?.email;
 
@@ -14,22 +20,26 @@ export default async function Page() {
     redirect("/api/auth/signin");
   }
 
-  const page = 1;
+  const page = Number(searchParams?.page) || 1;
+
   const minYear = 1900;
   const maxYear = new Date().getFullYear();
   const query = "";
   const allGenres = await fetchGenres();
 
   const genres = allGenres.length > 0 ? allGenres : [];
-  
+
+  const PAGE_SIZE = 6;
   const titles = await fetchTitles(
     page,
     minYear,
     maxYear,
     query,
     genres,
-    userEmail
+    userEmail,
   );
+
+  const isLastPage = titles.length < PAGE_SIZE;
 
   return (
     <div className="flex flex-col justify-between min-h-screen space-y-6 px-2">
@@ -52,8 +62,8 @@ export default async function Page() {
         ))}
       </section>
 
-      <footer>
-        <PaginationButtons />
+      <footer className="flex justify-center">
+        <PaginationButtons currentPage={page} isLastPage={isLastPage}/>
       </footer>
     </div>
   );
