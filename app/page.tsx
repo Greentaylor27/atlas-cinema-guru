@@ -1,71 +1,38 @@
-export const dynamic = 'force-dynamic';
-
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import MovieCard from "@/components/MovieCard";
 import { fetchGenres, fetchTitles } from "@/lib/data";
-import PaginationButtons from "@/components/PaginationButton";
-import Filter from "@/components/Filter";
+import MovieBrowser from "@/components/MovieBrowser";
 
-type PageProps = {
-  searchParams: { page?: string }
-};
+export const dynamic = 'force-dynamic';
 
-
-export default async function Page({ searchParams }: PageProps) {
+export default async function Page() {
   const session = await auth();
   const userEmail = session?.user?.email;
 
-  if(!userEmail) {
+  if (!userEmail) {
     redirect("/api/auth/signin");
   }
 
-  const page = Number(searchParams?.page) || 1;
-
-  const minYear = 1900;
-  const maxYear = new Date().getFullYear();
-  const query = "";
   const allGenres = await fetchGenres();
+  const genre = allGenres.length > 0 ? allGenres : [];
 
-  const genres = allGenres.length > 0 ? allGenres : [];
-
+  const minYear = 1990;
+  const maxYear = new Date().getFullYear();
+  const page = 1;
   const PAGE_SIZE = 6;
-  const titles = await fetchTitles(
-    page,
-    minYear,
-    maxYear,
-    query,
-    genres,
-    userEmail,
-  );
+  const effectiveQuery = "%";
 
+  const titles = await fetchTitles(page, minYear, maxYear, effectiveQuery, genre, userEmail);
   const isLastPage = titles.length < PAGE_SIZE;
 
   return (
     <div className="flex flex-col justify-between min-h-screen space-y-6 px-2">
-      <section className="w-full">
-        <Filter />
-      </section>
-
-      <section className="grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-4 justify-center items-start">
-        {titles.map((movies) => (
-          <MovieCard
-          titleId={movies.id}
-            key={movies.id}
-            title={movies.title}
-            image={movies.image}
-            year={movies.released}
-            genre={movies.genre}
-            synopsis={movies.synopsis}
-            isFavorited={movies.favorited}
-            isWatchLater={movies.watchLater}
-          />
-        ))}
-      </section>
-
-      <footer className="flex justify-center">
-        <PaginationButtons currentPage={page} isLastPage={isLastPage}/>
-      </footer>
+      <MovieBrowser
+        genres={genre}
+        userEmail={userEmail}
+        initialTitles={titles}
+        isLastPageInitial={isLastPage}
+      />
     </div>
-  );
+  )
 }
