@@ -8,6 +8,7 @@ import ClockSolid from "@/assets/Icon/Solid/clock.svg";
 import StarSolid from "@/assets/Icon/Solid/star.svg";
 import IconToggleButton from "./IconToggleButton";
 import { useFavorite } from "@/hooks/useFavorites";
+import { useWatchLater } from "@/hooks/useWatchLater";
 
 
 type MovieCardProps = {
@@ -32,7 +33,7 @@ export default function({
   isWatchLater = false,
 }: MovieCardProps) {
   const { favorited, toggleFavorite } = useFavorite(isFavorited, titleId);
-  const [watchLater, setWatchLater] = useState(isWatchLater);
+  const { watchLatered, toggleWatchLater } = useWatchLater(isWatchLater, titleId);
 
   return (
     <div className="group relative shadow-lg bg-[#001241] text-white transition-transform duration-300 hover:scale-105 rounded-xl border-2 border-[#1DD2AF]">
@@ -59,11 +60,11 @@ export default function({
             alt="Favorite"
           />
         </button>
-        <button onClick={() => setWatchLater(!watchLater)} aria-label="Toggle Watch Later" className="cursor-pointer">
+        <button onClick={toggleWatchLater} aria-label="Toggle Watch Later" className="cursor-pointer">
           <IconToggleButton
             activeIcon={ClockSolid}
             inactiveIcon={ClockOutline}
-            isActive={watchLater}
+            isActive={watchLatered}
             alt="Watch Later"
           />
         </button>

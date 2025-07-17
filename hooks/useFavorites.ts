@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState } from "react";
 
 export function useFavorite(initial: boolean, titleId: string) {
   const [favorited, setFavorited] = useState(initial);
