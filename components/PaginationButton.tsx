@@ -1,35 +1,37 @@
-'use client';
+'use client'
 
 type PaginationButtonProps = {
   currentPage: number;
-  isLastPage: boolean;
-  onPageChange: (page: number) => void;
+  hasMore: boolean;
+  onPageChange: (newPage: number) => void;
 };
 
 
-export default function PaginationButtons({ currentPage, isLastPage, onPageChange }: PaginationButtonProps) {
-  const prevPage = currentPage > 1 ? currentPage - 1 : 1;
-  const nextPage = currentPage + 1;
+export default function PaginationButtons({ currentPage, hasMore, onPageChange }: PaginationButtonProps) {
 
   return (
-    <div className="pagination-container flex gap-4 items-center">
-      <button
-        onClick={() => onPageChange(prevPage)}
-        className="pagination-button text-md disabled:opacity-50"
-        disabled={currentPage === 1}
-      >
-        Previous
-      </button>
+    <div className="pagination-container">
+      {currentPage > 1 && (
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          className="pagination-button text-md disabled:opacity-50"
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+      )}
 
       <div className="pagination-divider"></div>
 
-      <button
-        onClick={() => onPageChange(nextPage)}
-        className="pagination-button text-md disabled:opacity-50"
-        disabled={isLastPage}
-      >
-        Next
-      </button>
+      {hasMore && (
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          className="pagination-button text-md disabled:opacity-50"
+          disabled={!hasMore}
+        >
+          Next
+        </button>
+      )}
     </div>
   );
 }

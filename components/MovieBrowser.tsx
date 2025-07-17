@@ -10,9 +10,11 @@ type Props = {
   userEmail: string;
   initialTitles: Title[];
   isLastPageInitial: boolean;
+  showFilter?: boolean;
+  onPageChange?: (newPage: number) => void;
 };
 
-type Title = {
+export type Title = {
   id: string;
   title: string;
   synopsis: string;
@@ -27,33 +29,60 @@ export default function MovieBrowser({
   genres,
   userEmail,
   initialTitles,
-  isLastPageInitial
+  isLastPageInitial,
+  showFilter = true,
+  onPageChange,
 }: Props) {
+
   const [query, setQuery] = useState('');
   const [titles, setTitles] = useState<Title[]>(initialTitles);
   const [page, setPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(isLastPageInitial);
-
-  const minYear = 1990;
-  const maxYear = new Date().getFullYear();
-  const PAGE_SIZE = 6;
+  const [minYear, setMinYear] = useState('');
+  const [maxYear, setMaxYear] = useState('');
 
   useEffect(() => {
     async function loadTitles() {
-      const res = await fetch(`/api/titles?page=${page}&query=${query}&minYear=${minYear}&maxYear=${maxYear}`);
+      const params = new URLSearchParams();
+      params.set("page", page.toString());
+      params.set("query", query);
+
+      if (minYear) params.set('minYear', minYear);
+      if (maxYear) params.set("maxYear", maxYear);
+
+      const res = await fetch(`/api/titles?${params.toString()}`);
       const data = await res.json();
+
       setTitles(data.title);
-      setIsLastPage(data.isLastPage);
+      setIsLastPage(data.title.length < 6);
     }
 
-    if (page !== 1 || query !== '') {
+    if (showFilter) {
       loadTitles();
     }
-  }, [page, query]);
+  }, [page, query, minYear, maxYear, showFilter]);
+
+  function handlePageChange(newPage: number) {
+    if (onPageChange) {
+      onPageChange(newPage);
+    } else {
+      setPage(newPage);
+    }
+  }
 
   return (
     <>
-      <Filter onSearch={setQuery} genres={genres} />
+      {showFilter && (
+        <Filter
+          onSearch={setQuery}
+          genres={genres}
+          minYear={minYear}
+          maxYear={maxYear}
+          onMinYearChange={setMinYear}
+          onMaxYearChange={setMaxYear}
+        />
+      )}
+
       <section className="grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-4 justify-center items-start">
         {titles.map((movies) => (
           <MovieCard
@@ -73,8 +102,8 @@ export default function MovieBrowser({
       <footer className="flex justify-center">
         <PaginationButtons
           currentPage={page}
-          isLastPage={isLastPage}
-          onPageChange={(newPage) => setPage(newPage)}
+          hasMore={!isLastPage}
+          onPageChange={handlePageChange}
         />
       </footer>
     </>
